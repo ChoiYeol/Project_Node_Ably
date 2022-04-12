@@ -1,0 +1,30 @@
+{
+  "name": "Project_Node_Ably",
+  "version": "1.0.0",
+  "description": "Ably 과제",
+  "main": "main.js",
+  "scripts": {
+    "server": "nodemon src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChoiYeol/Project_Node_Ably.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChoiYeol/Project_Node_Ably/issues"
+  },
+  "homepage": "https://github.com/ChoiYeol/Project_Node_Ably#readme",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "moment": "^2.29.2",
+    "node-json-db": "^1.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
