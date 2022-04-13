@@ -6,7 +6,7 @@ const ctrl = require('./ctrl');
 router.get('/getUsersInfo', ctrl.getUsersInfo);
 router.get('/login', ctrl.login);
 router.get('/signUp', ctrl.signUp);
-router.get('/setPwByAuthPhone', ctrl.setPwByAuthPhone);
+router.get('/setUserPw', ctrl.setUserPw);
 router.get('/getAuthPhone', ctrl.getAuthPhone);
 
 module.exports = router;

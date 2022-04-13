@@ -1,4 +1,5 @@
 
+const { get } = require('express/lib/response');
 const moment = require('moment')
 const auth = require('../../auth/auth_users');
 const db = require('../../db/db_execute')
@@ -6,46 +7,42 @@ const db = require('../../db/db_execute')
 module.exports ={
 
     // 내 정보 보기 기능
-    getUsersInfo:(req, res, next) => {
-
-        let role = req.query.role;
-        let email = req.query.email;
-        let name = req.query.name;
-        let nickName = req.query.nickName;
-        let mobileNumber = req.query.mobileNumber;
-        let pw = req.query.pw;
-        let activated ;
-        let created_at ;
-
-        res.send('222');
+    getUsersInfo: async(req, res, next) => {
+        let tableName = 'users';
+        let id = req.query.id;
+ 
+        let result = await db.getData(`/${tableName}/${id}`)
+        res.send(result);
     },
 
     // 회원 가입 기능
     // 전화번호 인증 후 회원가입이 가능해야 합니다.
-    signUp:async (req, res, next) => {
+    signUp: async(req, res, next) => {
         try {
 
-        let id = req.query.id; //식별 가능한 모든 정보
-        let role = req.query.role;
-        let email = req.query.email; //식별 가능한 모든 정보
+        let id = req.query.id; //식별 가능한 모든 정보 중복 x
+        let email = req.query.email; //식별 가능한 모든 정보 중복 x
+        let mobileNumber = req.query.mobileNumber;//식별 가능한 모든 정보 중복 x
         let nickName = req.query.nickName;
-        let name = req.query.name; 
-        let mobileNumber = req.query.mobileNumber;//식별 가능한 모든 정보
-        let ramdom = req.query.ramdom;//식별 가능한 모든 정보
-        let pw = req.query.pw;
-        let activated = 'Y';
+        let name = req.query.name;
+        let random = req.query.random;//받은 난수 사용
+        let pw = req.query.pw; 
         let created_at = moment().format("YYMMDDHHmmss");
+        let authType = 'signUp'; //모바일 난수인증 할 때 비번 찾기와 회원가입 구분
+        // let role = req.query.role; 유저권한 
+        // let activated = 'Y'; 유저 활성화 여부
 
-        //벨리데이션 체크 넣으면 되는 부분
-        let userState={
-            no, id, role, email, nickName, name, mobileNumber, ramdom, pw, activated, created_at
-        }
-        let table = 'users'; 
-
-        let result2 = auth.signUpExe(userState);
-        // let result = await db.create(table, userState);
+        //벨리데이션 체크
         
+        let userState={
+            id, email, mobileNumber, nickName, name, random, pw, authType, created_at
+        }
+     
+        let result = await auth.signUpExe(userState);
+        // let result = await db.create(table, userState);
+        // let rere = await db.getData(`/users`)
         res.send(result);
+
         // return res;
         } catch (err) {
             console.error("signUp catch error : " + err); //log add
@@ -57,33 +54,48 @@ module.exports ={
     // 식별 가능한 모든 정보로 로그인이 가능해야 합니다.
     // 식별 가능한 모든 정보가 무엇인지는 스스로 판단하여 결정하시면 됩니다.
     // 예) 아이디 혹은 전화번호 + 비밀번호를 입력하면 로그인이 가능합니다.
-    login:(req, res, next) => { 
+    login:async (req, res, next) => { 
         try{
-            let id = req.query.id; //식별 가능한 모든 정보 
-            let email = req.query.email; //식별 가능한 모든 정보
-            let mobileNumber = req.query.mobileNumber;//식별 가능한 모든 정보
+            let id = req.query.id; //식별 가능한 모든 정보 중복 x
+            let email = req.query.email; //식별 가능한 모든 정보 중복 x
+            let mobileNumber = req.query.mobileNumber;//식별 가능한 모든 정보 중복 x
             let pw = req.query.pw;
-            
-            jwt();
+ 
+            let userState={
+                id, email, mobileNumber, pw
+            }
 
-            res.send('222');
+            let result = await auth.loginExe(userState);
+
+            res.send(result);
         } catch (err) {
             console.error("login catch error : " + err); //log add
             throw err;
         }
     },
 
-
     // 비밀번호 찾기 ( 재설정 ) 기능
     // 로그인 되어 있지 않은 상태에서 비밀번호를 재설정하는 기능입니다.
     // 전화번호 인증 후 비밀번호 재설정이 가능해야 합니다.
-    setPwByAuthPhone:(req, res, next) => {
+    setUserPw:async(req, res, next) => {
         let no = req.post.a;
         let role = req.post.a;
         let email = req.post.a;
         let name = req.post.a;
         
+        let authData = db.getData(`/auth/${userState.mobileNumber}`)
+        let authCheck =false;
+        if(userState.random == authData.random &&
+            userState.authType == authData.authType &&
+            userState.mobileNumber == authData.mobileNumber){
+            authCheck = true;
+        }
 
+        if(userState.random){
+            //맞으면 난수 통과
+        }
+        await db.create(`/${tableName}/${mobileNumber}`, result)
+        
         res.send('222');
     },
     getAuthPhone:async(req, res, next) => {
@@ -96,9 +108,8 @@ module.exports ={
         let result= {random, authType}
         let tableName = 'auth';
         
-        
-      
-        // 이미 있다면 덮어쓰기됨
+
+        //기존 폰넘버 존재시 업데이트됨
         await db.create(`/${tableName}/${mobileNumber}`, result)
         let ress = await db.getData(`/${tableName}/${mobileNumber}`)
         console.log(ress)

@@ -10,7 +10,7 @@ module.exports = {
         } catch (err) {
             console.error(`select ${table} catch error : ${err}`);
             // logger.error("exe main catch error : " + err);
-            throw err;
+            // throw err;
         } 
     },
     create: async function (table, queryStatement) {
