@@ -1,11 +1,13 @@
 # Project_Node_Ably
-프로젝트 설명
+# 프로젝트 설명
+
 회원 가입 및 비밀번호 재설정이 가능한 API를 제작합니다. 
 클린코드를 생각하며 디렉토리나 객체의 구분을 기능별로 나누었습니다.
 모든 요구사항은 최종구현 완료되었습니다.
 
 
-#사용 기술 및 환경
+# 사용 기술 및 환경
+
 환경: Node.js
 server: express
 db: node-json-db
@@ -13,7 +15,8 @@ auth: jsonwebtoken
 
 api_test : postman
 
-#실행방법
+# 실행방법
+
 1. 알집 해제 or git clone
 2. npm install
 3. npm run server
