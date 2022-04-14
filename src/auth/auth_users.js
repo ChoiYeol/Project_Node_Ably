@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const jwt = require('jsonwebtoken');
-const app_secret = process.env.APP_SECRET ;
+const app_secret = process.env.APP_SECRET; //jwt secret key env 적용
 const db = require('../db/db_execute')
 
 
@@ -29,7 +29,7 @@ module.exports = {
                     }
                 }
             }
-            
+            console.log("signUpExe end.") // 로그
             return true;
 
         } catch (err) {
@@ -40,11 +40,13 @@ module.exports = {
 
     },
 
-    // loginExe: async function(parent, args, context, info) {
+    //로그인 정보 체크 함수
     loginExe: async function (userState) {
         let accessId ;
 
         try {
+            console.log("loginExe start.") // 로그
+
             let userExistCheck = await db.getData(`/users`)
             
             //식별 가능 정보 로그인 체크
@@ -72,25 +74,27 @@ module.exports = {
                 throw new Error('This is the wrong password');
             }
 
-
+            
         } catch (err) {
             console.error("loginExe error is " + err);
             throw new Error(err);
         }
-
+        //jwt 발급
         const token = jwt.sign({
             id: accessId,
         }, app_secret, {
             expiresIn: '1d'
         });
-
+        console.log("loginExe end.") // 로그
         return {
             token,
             id:accessId
         }
     },
+    //모바일 난수 인증 함수
     randomAuth: async function (userState) {
         try {
+            console.log("randomAuth start.") // 로그
             //모바일 난수 인증 
             let authMobile = await db.getData(`/auth/${userState.mobileNumber}`)
             let authMobileCheck = false;
@@ -101,25 +105,28 @@ module.exports = {
                 }
             }else{
                 return false;
-                // throw new Error('This auth number does not exist');
+               
             }
+            console.log("randomAuth end.") // 로그
             return true
-            // if(!authMobileCheck){
-            //     throw new Error('This is the wrong auth number');
-            // }
+ 
         }catch (err) {
             console.error("getAuth: " + err);
             throw err;
         }
     },
+    //jwt 인증 함수
     getJwtAuth: async function (req, res, next) {
         try {
+            console.log("getJwtAuth start.") // 로그
             const Authorization = req.header('Authorization');
 
+            //jwt 맞는지 확인
             if (!Authorization) throw new Error('Please Sign in.'); 
             const token = Authorization.replace('Bearer ', '');
             const decoded = jwt.verify(token, app_secret);
 
+            console.log("getJwtAuth end.") // 로그
             if(decoded){
                 req.id = decoded.id;
                 next();

@@ -21,7 +21,7 @@ app.use('/api', routers);
 
 
 app.listen(port, ()=>{
-    console.log(port);
+    console.log(`start http://localhost:${54001}`); 
 })
 
 //노드에서 발생하는 예기치못한 에러처리 
