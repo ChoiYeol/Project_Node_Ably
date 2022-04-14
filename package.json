@@ -1,7 +1,7 @@
 {
   "name": "Project_Node_Ably",
   "version": "1.0.0",
-  "description": "Ably 과제",
+  "description": "Ably",
   "main": "main.js",
   "scripts": {
     "server": "nodemon src/main.js",
