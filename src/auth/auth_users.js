@@ -11,8 +11,7 @@ module.exports = {
     signUpExe: async function (userState) {
         try {
             console.log("signUpExe start.") // 로그
-            // await db.delete(`/users/434`)
-            // await db.reload();
+          
             // 식별 가능한 모든 정보 중복 체크
             let userExistCheck = await db.getData(`/users`)
            

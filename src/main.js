@@ -11,22 +11,24 @@ const corsOptions = {
     origin: "http://localhost:54001",
     credentials: true
 }
+//json 바디파싱 설정 추가
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors(corsOptions));
 
+// api 라우터
 app.use('/api', routers);
 
-// app.use('/', (req, res, next)=>{
-//     console.log("middle 1")
-//     // next()
-// })
-
-// app.use((req, res)=>{
-//     console.log("middle 2")
-//     res.send("hello express")
-// })
 
 app.listen(port, ()=>{
     console.log(port);
 })
+
+//노드에서 발생하는 예기치못한 에러처리 
+process.on('uncaughtException', (err)=>{
+    console.log('!!uncaughtException: ', err);
+});
+//프라미스에서 발생하는 예기치못한 에러처리 
+process.on('unhandledRejection', (reason, promise) => {
+console.error('!!!Unhandled Rejection at:', JSON.stringify(promise), 'reason:', JSON.stringify(reason))
+});

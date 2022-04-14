@@ -25,7 +25,7 @@ module.exports ={
         let nickName = req.body.nickName;
         let name = req.body.name;
         let random = req.body.random;//받은 난수 사용
-        let pw = req.body.pw; 
+        let pw = req.body.pw;  // 단방향 암호화 해주면 좋음
         let created_at = moment().format("YYMMDDHHmmss");
         let authType = 'signUp'; //모바일 난수인증 할 때 비번 찾기와 회원가입 구분
         // let role = req.query.role; 유저권한 
@@ -51,7 +51,6 @@ module.exports ={
 
         await db.create(`/users/${userState.id}`, userState) 
         let result = await db.getData(`/users/${userState.id}`) 
-        // let rere = await db.getData(`/users`)
         res.send(result);
 
         // return res;
@@ -100,11 +99,13 @@ module.exports ={
             id, random, authType, mobileNumber
         }
 
+        //난수 체크 
         let randomAuthCheck = await auth.randomAuth(userState);
         if(!randomAuthCheck){
             throw new Error('This is the wrong auth number');
         }
         let result = await db.getData(`/users/${id}`)
+        //새 비밀번호 입력
         result['pw'] = newPw;
         await db.create(`/users/${id}`, result)
         
@@ -117,12 +118,11 @@ module.exports ={
         let max = 99999;
         let random = Math.floor(Math.random() * (max - min + 1)) + min; //5자리 난수
         
-        let authState= {random, authType}
-        let tableName = 'auth';
+        let authState= {random, authType} 
 
         //기존 폰넘버 존재시 업데이트됨
-        await db.create(`/${tableName}/${mobileNumber}`, authState)
-        let result = await db.getData(`/${tableName}/${mobileNumber}`)
+        await db.create(`/auth/${mobileNumber}`, authState)
+        let result = await db.getData(`/auth/${mobileNumber}`)
         result ={
             ...result,
             mobileNumber
